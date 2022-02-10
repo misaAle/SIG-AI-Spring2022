@@ -26,11 +26,20 @@ make sure to click on notebook, and not on jupyterlab
 - Next, create new python file
 - Now, you have your notebook set up and ready to work with!
 
+
+## Importing the required modules
+
+Copy and paste this code snippet into your first cell and run it
 ```
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
 ```
+## Using pandas to read datasets
 
-#importing modules
+This code snippet allows the user to read a dataset from the UCI Machine Learning repository and store as a DataFrame
+```
+iris = pd.read_csv("https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data", header=None)
+```
+
