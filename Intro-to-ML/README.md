@@ -3,7 +3,7 @@
 
 ## Anaconda
 
-1. First, check if you've already installed Anaconda by opening a command prompt and typing conda
+1. First, check if you've already installed Anaconda by opening a command prompt and typing **conda**
 2. If you don't have it installed, then go to [Anaconda installation](https://www.anaconda.com/products/individual) to install anaconda based on your OS
 3. If you have python installed, but not through Anaconda, then open a command prompt and type **pip install jupyter**
 4. Once you've got jupyter installed, we're also going to need other modules
