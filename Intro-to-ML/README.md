@@ -42,4 +42,17 @@ This code snippet allows the user to read a dataset from the UCI Machine Learnin
 ```
 iris = pd.read_csv("https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data", header=None)
 ```
+You now have access to the iris dataset!
 
+We now want to modify the data so it can be more readable and understandable
+
+```
+iris.columns = ["sepal length", "sepal width", "petal length", "petal width", "class"]
+iris.columns
+```
+This classifies the columns, or *features*, of the data. The second line also displays the columns.
+
+
+```
+inputs = iris.iloc[:,0:4].values
+```
