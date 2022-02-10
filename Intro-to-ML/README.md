@@ -10,3 +10,5 @@
 5. Anaconda comes with most of the modules needed for machine learning, which are *pandas*, *matplotlib*, *numpy*, and *scikit-learn*.
 6. Using pip install, we can install these modules by running **pip install pandas matplotlib numpy scikit-learn**
 7. Now, launch jupyter notebook by going to anaconda navigator and launch jupyter notebook, or typing **jupyter notebook** in command prompt
+
+<img width="1422" alt="anaconda_example" src="https://user-images.githubusercontent.com/61035833/153460548-46b5fb98-51ae-4c29-9a06-6c5e87d6151e.png">
