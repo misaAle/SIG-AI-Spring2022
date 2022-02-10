@@ -25,3 +25,12 @@ make sure to click on notebook, and not on jupyterlab
 - Best practice is to create a new folder in which you'll have your files in, so click on *new* and create folder
 - Next, create new python file
 - Now, you have your notebook set up and ready to work with!
+
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import preprocessing
+```
+
+#importing modules
