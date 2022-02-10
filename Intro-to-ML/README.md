@@ -52,7 +52,86 @@ iris.columns
 ```
 This classifies the columns, or *features*, of the data. The second line also displays the columns.
 
+## Extracting useful information
+
+We want to extract information from the data that will allow us to use it effectively. For example, this dataset has four columns of numerical values, and one column classifying each entry. Meaning, the numerical values are the data we should be handling the most. Using *iloc*, we can extract these four columns and storing it as a numpy array.
 
 ```
 inputs = iris.iloc[:,0:4].values
 ```
+
+## Class labeling
+
+We've extracted the numerical values from the original data, but we still want to process our *"class"* column into something we can use.
+
+```
+from sklearn import preprocessing
+label = preprocessing.LabelEncoder()
+targets = label.fit_transform(iris["class"])
+```
+
+*'LabelEncoder()'* essentially takes in the *"class"* column and transforms it into numerical labels (0, 1, 2).
+- **For reference, 0 = Setosa, 1 = Versicolour, 2 = Viginica**
+
+## Visualizing the data
+
+The data has been processed and is ready to visualize. The best way to visualize data is too look at the data in small portions.
+
+```
+plt.scatter(iris["petal length"], iris["petal width"], c = targets)
+```
+
+Try changing the columns to visualize the data more, such as *"sepal length"* and *"sepal width"*!
+
+Another cool thing you can do is get a scatter plot of every feature by using the following-
+```
+pd.plotting.scatter_matrix(iris.iloc[:,0:4], c = targets, figsize = (10,10))
+```
+This can allow us to look plots from different angles
+
+# Testing out algorithms
+
+- The last thing to do is apply algorithms that will classify and predict the data
+- We can test out our own simply algorithm or already implemented algorithms
+
+## Basic decision tree
+
+This code snippet is an algorithm I came up with based on the first plot
+```
+def decision_tree(row):
+    if row["petal length"] < 2.5:
+        return 0
+    elif row["petal length"] < 5.0:
+        return 1
+    else:
+        return 2
+    
+num_correct = 0
+for i, row in iris.iloc[:,0:4].iterrows():
+    prediction = decision_tree(row)
+    if prediction == targets[i]:
+        num_correct +=1
+        
+print("accuracy =", num_correct/len(iris))
+```
+As we can see, this algorithm can yield pretty good results despite being simple.
+Can you come up with a better decision tree with a better accuracy score?
+
+## KNN Algorithm
+
+Sklearn provides the K Nearest Neighbors algorithm and we can apply it to pretty much any problem
+The following snippet imports the algorithm and extracts the necessary data into our variables *X_train, X_test, y_train, y_test*
+
+```
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=3)
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(inputs, targets)
+```
+
+Now we can fit the model using the following-
+```
+iris_knn = knn.fit(X_train, y_train)
+iris_knn.score(X_test, y_test)
+```
+
