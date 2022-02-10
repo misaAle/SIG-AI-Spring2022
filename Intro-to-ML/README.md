@@ -17,7 +17,7 @@
 
 make sure to click on notebook, and not on jupyterlab
 
-## Jupyter start-up
+## Jupyter Start-up
 
 #### The start-up displays all your user folders
 <img width="1429" alt="jupyter_start" src="https://user-images.githubusercontent.com/61035833/153461781-8b54a444-e984-4000-8f06-960242cf64a1.png">
@@ -94,7 +94,7 @@ This can allow us to look plots from different angles
 - The last thing to do is apply algorithms that will classify and predict the data
 - We can test out our own simply algorithm or already implemented algorithms
 
-## Basic decision tree
+## Basic Decision Tree
 
 This code snippet is an algorithm I came up with based on the first plot
 ```
@@ -134,4 +134,78 @@ Now we can fit the model using the following-
 iris_knn = knn.fit(X_train, y_train)
 iris_knn.score(X_test, y_test)
 ```
+
+## Sklearn Decision Tree Algorithm
+Sklearn has their own decision tree algorithm that makes these cut-off segments.
+```
+from sklearn import tree
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(X_train, y_train)
+clf.score(X_test, y_test)
+```
+
+We can visualize the tree using the following-
+```
+plt.figure(figsize=(12,12))
+tree.plot_tree(clf, fontsize=10)
+tree.plot_tree(clf);
+```
+
+# Bonus
+
+```
+from sklearn.datasets import load_iris
+
+iris_copy = load_iris()
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier
+
+# Parameters
+n_classes = 3
+plot_colors = "ryb"
+plot_step = 0.02
+
+
+for pairidx, pair in enumerate([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]):
+    # We only take the two corresponding features
+    X = iris_copy.data[:, pair]
+    y = iris_copy.target
+
+    # Train
+    clf_copy = DecisionTreeClassifier().fit(X, y)
+
+    # Plot the decision boundary
+    plt.subplot(2, 3, pairidx + 1)
+
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(
+        np.arange(x_min, x_max, plot_step), np.arange(y_min, y_max, plot_step)
+    )
+    plt.tight_layout(h_pad=0.5, w_pad=0.5, pad=2.5)
+
+    Z = clf_copy.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    cs = plt.contourf(xx, yy, Z, cmap=plt.cm.RdYlBu)
+
+    plt.xlabel(iris_copy.feature_names[pair[0]])
+    plt.ylabel(iris_copy.feature_names[pair[1]])
+
+    # Plot the training points
+    for i, color in zip(range(n_classes), plot_colors):
+        idx = np.where(y == i)
+        plt.scatter(
+            X[idx, 0],
+            X[idx, 1],
+            c=color,
+            label=iris_copy.target_names[i],
+            cmap=plt.cm.RdYlBu,
+            edgecolor="black",
+            s=15,
+        )
+
+plt.suptitle("Decision surface of decision trees trained on pairs of features")
+plt.legend(loc="lower right", borderpad=0, handletextpad=0)
+_ = plt.axis("tight")
 
