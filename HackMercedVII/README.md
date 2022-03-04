@@ -210,7 +210,50 @@ for pairidx, pair in enumerate([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]])
 plt.suptitle("Decision surface of decision trees trained on pairs of features")
 plt.legend(loc="lower right", borderpad=0, handletextpad=0)
 _ = plt.axis("tight")
-'''
+
+```
+
+# OpenCV Basics
+
+How to use OpenCV?
+```
+import cv2 as cv
+```
+
+- Imread (Stores an image as a Mat object for images using the path to Image as a string)
+- Imshow (Displays the image)
+- Imwrite (Saves the image
+
+There are multiple ways to retrieve the path to an image, such as
+
+Most conventional way that is interactive:
+```
+import easygui
+path=easygui.fileopenbox() //returns a string
+
+img = cv.imread(pathath) // saves image to 'img'
+```
+
+If you're just dealing with one file, then this is more straightforward:
+```
+img = cv.imread(cv.samples.findFile("starry_night.jpg"))
+```
 
 
-# bdi
+Showing the image is also pretty simple:
+```
+cv.imshow("Display window", img)
+```
+
+Saving the image using 'Imwrite':
+```
+cv.imwrite("starry_night.png", img)
+```
+
+'Imwrite' is a little more complicated to use as it requires a full path, so you can import OS module to tinker around with folders and files:
+```
+import os
+path1 = os.path.dirname(ImagePath)
+extension=os.path.splitext(ImagePath)[1]
+path = os.path.join(path1, newName+extension)
+```
