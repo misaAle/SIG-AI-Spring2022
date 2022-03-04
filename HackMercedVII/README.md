@@ -1,4 +1,4 @@
-# Welcome to the first SIG AI workshop of the semester!
+# Welcome to HackMerced VII Intro to ML workshop!
 ### Here, we'll go over a quick tutorial on setting up Jupyter notebook and working with a dataset.
 
 ## Anaconda
