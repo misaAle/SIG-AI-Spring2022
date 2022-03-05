@@ -4,12 +4,13 @@
 ## Anaconda
 
 1. First, check if you've already installed Anaconda by opening a command prompt and typing **conda**
-2. If you don't have it installed, then go to [Anaconda installation](https://www.anaconda.com/products/individual) to install anaconda based on your OS 
-3. If you have python installed, but not through Anaconda, then open a command prompt and type **pip install jupyter**
-4. Once you've got jupyter installed, we're also going to need other modules
-5. Anaconda comes with most of the modules needed for machine learning, which are *pandas*, *matplotlib*, *numpy*, and *scikit-learn*.
-6. Using pip install, we can install these modules by running **pip install pandas matplotlib numpy scikit-learn**
-7. Now, launch jupyter notebook by going to anaconda navigator and launch jupyter notebook, or typing **jupyter notebook** in command prompt
+2. If you don't have it installed, then go to [Anaconda installation](https://www.anaconda.com/products/individual) to install anaconda based on your OS
+3. You can also install python through their installation page, without Anaconda. [python download](https://www.python.org/downloads/). Make sure to add python to PATH
+4. If you have python installed, but not through Anaconda, then open a command prompt and type **pip install jupyter**
+5. Once you've got jupyter installed, we're also going to need other modules
+6. Anaconda comes with most of the modules needed for machine learning, which are *pandas*, *matplotlib*, *numpy*, and *scikit-learn*.
+7. Using pip install, we can install these modules by running **pip install pandas matplotlib numpy scikit-learn**
+8. Now, launch jupyter notebook by going to anaconda navigator and launch jupyter notebook, or typing **jupyter notebook** in command prompt
 
 If you're hesitant on installing Anaconda, or installing Python, then I suggest following along with the workshop using Google Colab [Colab](https://research.google.com/colaboratory/) 
 
@@ -121,7 +122,7 @@ Can you come up with a better decision tree with a better accuracy score?
 
 ## KNN Algorithm
 
-Sklearn provides the K Nearest Neighbors algorithm and we can apply it to pretty much any problem
+Sklearn provides their own K Nearest Neighbors algorithm and we can apply it to pretty much any problem
 The following snippet imports the algorithm and extracts the necessary data into our variables *X_train, X_test, y_train, y_test*
 
 ```
@@ -231,7 +232,7 @@ Most conventional way that is interactive:
 import easygui
 path=easygui.fileopenbox() //returns a string
 
-img = cv.imread(pathath) // saves image to 'img'
+img = cv.imread(path) // saves image to 'img'
 ```
 
 If you're just dealing with one file, then this is more straightforward:
@@ -253,7 +254,120 @@ cv.imwrite("starry_night.png", img)
 'Imwrite' is a little more complicated to use as it requires a full path, so you can import OS module to tinker around with folders and files:
 ```
 import os
-path1 = os.path.dirname(ImagePath)
-extension=os.path.splitext(ImagePath)[1]
-path = os.path.join(path1, newName+extension)
+newName="Saved_Image"
+path1 = os.path.dirname(path)
+extension=os.path.splitext(path)[1]
+ImgPath = os.path.join(path1, newName+extension)
+cv.imwrite(ImgPath, img) //saved in the same folder as where img was stored
 ```
+
+# Capturing Videos
+
+The following code snippet shows how to open your camera using cv:
+```
+cap = cv.VideoCapture(0)
+```
+
+To capture a video, we capture frame by frame with a while-loop:
+```
+while True:
+    ret, frame = cap.read() //ret = true or false
+    if not ret:
+        print("Can't receive frame. Exiting ...")
+        break
+ 
+    cv.imshow('frame')
+    if cv.waitKey(1) == ord('q'):
+        break
+```
+
+Saving a video you just captured is a bit more complicated:
+
+```
+fourcc = cv.VideoWriter_fourcc(*'DIVX') //fourcc specifies video codec
+out = cv.VideoWriter('output.avi', fourcc, 20.0, (640,  480)) //creates videowriter object
+
+cap = cv.VideoCapture(0)
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        print("Can't receive frame. Exiting ...")
+        break
+
+    out.write(frame)
+    cv.imshow('frame')
+    if cv.waitKey(1) == ord('q'):
+        break
+```
+
+We can also add text to images in this way:
+```
+font = cv.FONT_HERSHEY_SIMPLEX
+text = 'Example'
+cv.putText(img,test,(10,500), font, 4,(255,255,255))
+```
+
+
+[OpenCV](https://docs.opencv.org/4.x/db/d27/tutorial_py_table_of_contents_feature2d.html)
+
+
+# Example Project
+
+#### Recognizing hand-written digits
+
+Prepare the data using a numpy array:
+```
+import numpy as np
+import cv2 as cv
+
+img = cv.imread('digits.png')
+gray = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+
+# Now we split the image to 5000 cells, each 20x20 size
+cells = [np.hsplit(row,100) for row in np.vsplit(gray,50)]
+
+# Make it into a Numpy array: its size will be (50,100,20,20)
+x = np.array(cells)
+
+# Now we prepare the training data and test data
+train = x[:,:50].reshape(-1,400).astype(np.float32) # Size = (2500,400)
+test = x[:,50:100].reshape(-1,400).astype(np.float32) # Size = (2500,400)
+```
+
+Prepare to use data on KNN model:
+```
+# Create labels for train and test data
+k = np.arange(10)
+train_labels = np.repeat(k,250)[:,np.newaxis]
+test_labels = train_labels.copy()
+```
+
+Create OpenCV KNN model:
+```
+knn = cv.ml.KNearest_create()
+knn.train(train, cv.ml.ROW_SAMPLE, train_labels)
+ret,result,neighbours,dist = knn.findNearest(test,k=5)
+```
+
+Print results based on testing data:
+```
+matches = result==test_labels
+correct = np.count_nonzero(matches)
+accuracy = correct*100.0/result.size
+print( accuracy )
+```
+
+#### Ideas?
+
+- Build a tkinter canvas so that you can write your own digits for the model to predict
+- Continuously train the model based on new data you input (could be useful if you're using the model in a website)
+- Try implementing an english alphabet character recognition model
+- Use other cv.ml algorithms
+
+
+Resources and Documentation:
+- [OpenCV_documentation](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html)
+- [data_flair digit recognizer using canvas](https://data-flair.training/blogs/python-deep-learning-project-handwritten-digit-recognition/)
+- [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/index.php)
+- [scikit-learn algorithms](https://scikit-learn.org/stable/supervised_learning.html)
+- 
