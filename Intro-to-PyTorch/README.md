@@ -247,7 +247,7 @@ print(f"Predicted class: {y_pred}")
 
 So we have defined and created our model. The next step is to train it, but there are other stuff we need to handle before that.
 
-# Training the model
+# Before we train the model
 
 - The main component to how the neural network determines its accuracy is a loss function
 - The loss function calculates the difference between the expected output and the actual output that a neural network produces
@@ -259,6 +259,128 @@ So we have defined and created our model. The next step is to train it, but ther
 
 Before we train our model, there are certain parameters that we must go over-
 
-- Number of Epochs - the number times the entire training dataset is pass through the network.
+- Number of Epochs - the number of times the entire training dataset is pass through the network (iterations).
 - Batch Size - the number of data samples seen by the model in each epoch. Iterates are the number of batches needs to compete an epoch.
 - Learning Rate - the size of steps the model match as it searchs for best weights that will produce a higher model accuracy. Smaller values means the model will take a longer time to find the best weights, while larger values may result in the model step over and misses the best weights which yields unpredictable behavior during training.
+
+```
+learning_rate = 1e-3
+batch_size = 64
+epochs = 5
+```
+
+Common loss functions-
+1. ``torch.nn.L1Loss``: Mean Absolute Error - *loss(x, y) = |x - y|*
+2. ``torch.nn.MSELoss``: Mean Squared Error Loss - *loss(x, y) = (x - y)^2*
+3. ``torch.nn.NLLLoss``: Negative Log-Likelihood - *loss(x, y) = - log(y)*
+4. ``torch.nn.CrossEntropyLoss``: Cross-Entropy Loss = *loss(x, y) = -Σ(xlog(y))*
+
+We will be using-
+```loss_fn = nn.CrossEntropyLoss()
+```
+
+Optimizing Algorithms-
+- We need an algorithm that will optimize the model's parameters so it can reduce error in every step
+- There are several optimizing algorithms that work for different models, but we will be using Stochastic Gradient Descent(SGD)
+
+```
+optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+```
+
+# Training the model
+
+```
+def train_loop(dataloader, model, loss_fn, optimizer):
+    size = len(dataloader.dataset)
+    for batch, (X, y) in enumerate(dataloader):        
+
+        pred = model(X)
+        loss = loss_fn(pred, y)
+        
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if batch % 100 == 0:
+            loss, current = loss.item(), batch * len(X)
+            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+```
+
+This is our loop for training a single iteration, or epoch.
+``optimizer.zero_grade()`` resets the gradients, since gradients add up by default
+``loss.backward()`` is back propagation algorithm
+``optimizer.step()`` adjusts the parameters with the gradients we just collected from back propagation
+
+Loop for testing-
+```
+def test_loop(dataloader, model, loss_fn):
+    size = len(dataloader.dataset)
+    test_loss, correct = 0, 0
+
+    with torch.no_grad():
+        for X, y in dataloader:
+            pred = model(X)
+            test_loss += loss_fn(pred, y).item()
+            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+            
+    test_loss /= size
+    correct /= size
+    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+```
+
+Putting it all together-
+```
+learning_rate=1e-3
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+
+epochs = 10
+for t in range(epochs):
+    print(f"Epoch {t+1}\n-------------------------------")
+    train_loop(train_dataloader, model, loss_fn, optimizer)
+    test_loop(test_dataloader, model, loss_fn)
+print("Done!")
+```
+
+This will take some time to finish as it's doing a lot of calculations for each epoch.
+
+# Saving models
+
+```
+torch.save(model.state_dict(), "data/model.pth")
+
+print("Saved PyTorch Model State to model.pth")
+```
+
+Models can be saved with the '.pth' or '.pt' file extension
+
+# Loading models
+
+```
+model = NeuralNetwork()
+model.load_state_dict(torch.load('data/model.pth'))
+model.eval()
+```
+
+# Conclusion
+
+Last test to evaulate specific predictions-
+```
+classes = [
+    "T-shirt/top",
+    "Trouser",
+    "Pullover",
+    "Dress",
+    "Coat",
+    "Sandal",
+    "Shirt",
+    "Sneaker",
+    "Bag",
+    "Ankle boot",
+]
+x, y = test_data[0][0], test_data[0][1]
+with torch.no_grad():
+    pred = model(x)
+    predicted, actual = classes[pred[0].argmax(0)], classes[y]
+    print(f'Predicted: "{predicted}", Actual: "{actual}"')
+```
