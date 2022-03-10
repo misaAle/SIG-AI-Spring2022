@@ -3,7 +3,7 @@
 ### Setting up virtual python environment
 1. Open a command prompt and run ``python3 -m venv {your_env_name}``
 2. On Windows, run ``{your_env_name}\Scripts\activate.bat``
-3. On Unix or MacOS, run `` source {your_env_name/bin/activate}``
+3. On Unix or MacOS, run `` source {your_env_name}/bin/activate``
 4. Now you can use ``pip install`` in this v-env local to just this folder
 
 
