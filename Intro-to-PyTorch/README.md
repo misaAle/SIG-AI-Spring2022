@@ -276,7 +276,8 @@ Common loss functions-
 4. ``torch.nn.CrossEntropyLoss``: Cross-Entropy Loss = *loss(x, y) = -Σ(xlog(y))*
 
 We will be using-
-```loss_fn = nn.CrossEntropyLoss()
+```
+loss_fn = nn.CrossEntropyLoss()
 ```
 
 Optimizing Algorithms-
