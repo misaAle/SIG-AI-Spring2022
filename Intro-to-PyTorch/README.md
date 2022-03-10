@@ -385,3 +385,10 @@ with torch.no_grad():
     predicted, actual = classes[pred[0].argmax(0)], classes[y]
     print(f'Predicted: "{predicted}", Actual: "{actual}"')
 ```
+
+
+# What's next?
+
+- You can test out other datasets and learn how to implement different models. Here's a [link to the datasets PyTorch provides](https://pytorch.org/vision/stable/datasets.html)
+- I recommend look at the MNIST Handwritten-Digit Recognition dataset. It is a great beginner project, and you can add on to it very easily. For example, [this link uses the MNIST dataset, without PyTorch, but you can implement it using PyTorch to demonstrate your knowledge of it](https://data-flair.training/blogs/python-deep-learning-project-handwritten-digit-recognition/)
+- Look at PyTorch documentation if you really want to understand the functions it includes ([PyTorchTutorials](https://pytorch.org/tutorials/))
