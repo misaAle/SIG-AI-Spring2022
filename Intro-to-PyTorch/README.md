@@ -6,7 +6,7 @@
 3. On Unix or MacOS, run `` source {your_env_name}/bin/activate``
 4. Now you can use ``pip install`` in this v-env local to just this folder
 
-
+Make sure to install the required modules using ``pip install notebook matplotlib
 
 
 # What is PyTorch
@@ -20,6 +20,7 @@ To install PyTorch:
 1. Use ``pip3 install torch torchvision torchaudio``
 Import the following modules-
 ```
+%matplotlib inline
 import torch
 import numpy as np
 ```
