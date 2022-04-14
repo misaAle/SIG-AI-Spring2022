@@ -29,6 +29,7 @@ The `@tf.function` indicates that we want the add function to be converted into 
 # Load the data
 
 ```
+import tensorflow as tf
 cifar10 = tf.keras.datasets.cifar10
 (train_images, train_labels), (test_images, test_labels) = cifar10.load_data()
 train_images.shape
